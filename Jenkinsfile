@@ -16,8 +16,9 @@ pipeline {
 		script{
 		    app = docker.build("crixguy/train-schedule")
 		    app.inside {
-			sh 'echo $(netstat -nap | grep 8080)'
+			sh 'echo $(docker ps)'
 		    }
+		    sh 'echo $(docker ps)'
 		}
 	    }
 	}
