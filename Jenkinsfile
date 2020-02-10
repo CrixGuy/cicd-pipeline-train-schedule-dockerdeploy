@@ -38,14 +38,16 @@ pipeline {
 		input 'Deploy to Production?'
 		milestone(1)
 		withCredentials([usernamePassword(credentialsId: 'webserver_login', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]){
-		    sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker pull crixguy/train-schedule:${env.BUILD_NUMBER}\""
-		    try{
-			sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker stop train-schedule\""
-			sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker rm train-schedule\""
-		    } catch (err){
-			echo: 'caught error: $err'
-		    }
-		    sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker run --restart always --name train-schedule -p 8080:8080 -d crixguy/train-schedule:${env.BUILD_NUMBER}\""
+			script {
+				sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker pull crixguy/train-schedule:${env.BUILD_NUMBER}\""
+		    		try{
+					sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker stop train-schedule\""
+					sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker rm train-schedule\""
+		    		} catch (err){
+					echo: 'caught error: $err'
+				    }
+			    	sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_server \"docker run --restart always --name train-schedule -p 8080:8080 -d crixguy/train-schedule:${env.BUILD_NUMBER}\""
+			}
 		}
 	    }	    
 	}
