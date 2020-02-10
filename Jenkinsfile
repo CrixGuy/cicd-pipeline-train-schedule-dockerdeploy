@@ -16,9 +16,8 @@ pipeline {
 		script{
 		    app = docker.build("crixguy/train-schedule")
 		    app.inside {
-			sh 'echo $(docker ps)'
+			sh 'echo $(sleep 3; curl localhost:8080)'
 		    }
-		    sh 'echo $(docker ps)'
 		}
 	    }
 	}
