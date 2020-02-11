@@ -16,7 +16,7 @@ pipeline {
 		script{
 		    app = docker.build("crixguy/train-schedule")
 		    app.inside {
-			sh 'echo $(ss -nalp)'
+			sh 'echo $(curl localhost:8080)'
 		    }
 		}
 	    }
